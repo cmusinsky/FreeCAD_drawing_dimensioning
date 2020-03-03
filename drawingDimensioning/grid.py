@@ -151,8 +151,12 @@ class GridManager:
                 for i in range(1, int(W / (div*div_period) )+1):
                     dArg = dArg + ' M %f 0 L %f %f' % (i*div*div_period, i*div*div_period, H)
                 for i in range(1, int(H / (div*div_period) )+1):
-                    dArg = dArg + ' M 0 %f L %f %f' % (i*div*div_period, W, i*div*div_period)
-                self.SVGRenderer.load( QtCore.QByteArray( '''<svg width="%i" height="%i"> <path stroke="%srgb(0, 255, 0)" stroke-width="%f" d="%s"/> </svg>''' % (drawingVars.width, drawingVars.height, clr, lineWidth, dArg) ) )
+                    dArg = dArg + ' M 0 %f L %f %f' % (i*div*div_period, W, i*div*div_period)                
+                svg_parms = (
+                                '<svg width="%i" height="%i"> <path stroke="%srgb(0, 255, 0)" stroke-width="%f" d="%s"/> </svg>'
+                                % (drawingVars.width, drawingVars.height, clr, lineWidth, dArg)
+                            )
+                self.SVGRenderer.load( QtCore.QByteArray(svg_parms.encode()) )
                 self.SVG.setSharedRenderer( self.SVGRenderer )
                 self.SVG.setTransform( drawingVars.transform )
                 self.SVG.setZValue( 0.08 ) #ensure behind dimension preview SVG ...

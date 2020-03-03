@@ -25,6 +25,11 @@ def initializePreview( dimensioningProcessTracker, dimensionSvgFun, dimensionCli
     preview.dimensioningProcessTracker = dimensioningProcessTracker
     preview.drawingVars = drawingVars
     preview.setTransform(drawingVars)
+    svg_parms = (
+                    '<svg width="%i" height="%i"> </svg>'
+                    % (drawingVars.width, drawingVars.height)
+                )
+
     if not hasattr(preview, 'SVG'):
         createQtItems = True
     elif not preview.removedQtItems:
@@ -57,7 +62,7 @@ def initializePreview( dimensioningProcessTracker, dimensionSvgFun, dimensionCli
         preview.SVG =  QtSvg.QGraphicsSvgItem() 
         debugPrint(3, 'creating dimPreview SVG renderer')
         preview.SVGRenderer = QtSvg.QSvgRenderer()
-        preview.SVGRenderer.load( QtCore.QByteArray( '''<svg width="%i" height="%i"> </svg>''' % (drawingVars.width, drawingVars.height) ) ) #without this something goes wrong...
+        preview.SVGRenderer.load( QtCore.QByteArray( svg_parms.encode() ) ) #without this something goes wrong...
         preview.SVG_initialization_width = drawingVars.width
         preview.SVG_initialization_height = drawingVars.height
         preview.SVG.setSharedRenderer( preview.SVGRenderer )
@@ -65,7 +70,7 @@ def initializePreview( dimensioningProcessTracker, dimensionSvgFun, dimensionCli
         preview.SVG.setZValue( 0.09 )
     preview.removedQtItems = False
     debugPrint(4, 'adding SVG')
-    preview.SVGRenderer.load( QtCore.QByteArray( '''<svg width="%i" height="%i"> </svg>''' % (drawingVars.width, drawingVars.height) ) )
+    preview.SVGRenderer.load( QtCore.QByteArray( svg_parms.encode() ) )
     preview.SVG.update()
     #preview.SVG.
     drawingVars.graphicsScene.addItem( preview.SVG )
@@ -153,7 +158,7 @@ class DimensionPreviewRect(QtGui.QGraphicsRectItem):
             if isinstance(XML, unicode_type): 
                 XML = encode_if_py2(XML)
             debugPrint(5, XML)
-            preview.SVGRenderer.load( QtCore.QByteArray( XML ) )
+            preview.SVGRenderer.load( QtCore.QByteArray( XML.encode() ) )
             preview.SVG.update()
         except:
             App.Console.PrintError(traceback.format_exc())
